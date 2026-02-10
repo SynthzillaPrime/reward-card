@@ -88,7 +88,7 @@ function App() {
             document.getElementById("last-ruined-input").showPicker()
           }
         >
-          <div className="day-count-label">DAYS SINCE LAST RUINED</div>
+          <div className="day-count-label">LAST RUINED</div>
           <input
             type="date"
             id="last-ruined-input"
@@ -106,7 +106,7 @@ function App() {
             document.getElementById("last-full-input").showPicker()
           }
         >
-          <div className="day-count-label">DAYS SINCE LAST FULL</div>
+          <div className="day-count-label">LAST FULL</div>
           <input
             type="date"
             id="last-full-input"

@@ -1,14 +1,15 @@
 body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
     font-family: "Montserrat", sans-serif;
-    font-weight: 300;
-    color: #999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: linear-gradient(165deg, #2c2c2c 0%, #1a1a1a 100%);
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+    margin: 0;
+    color: #999;
+    font-weight: 300;
     touch-action: manipulation;
 }
 
@@ -194,15 +195,12 @@ h1 {
 }
 
 .day-count-label {
-    font-size: 8px;
+    font-size: 9px;
     color: #666;
     margin-bottom: 8px;
     text-transform: uppercase;
     font-weight: 300;
     letter-spacing: 1.5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .day-count-number {
