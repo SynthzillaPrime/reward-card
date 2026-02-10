@@ -21,7 +21,9 @@ function App() {
   };
 
   const resetCard = () => {
-    setStampedIndices([]);
+    if (confirm("Reset the card? This will clear all keys.")) {
+      setStampedIndices([]);
+    }
   };
 
   const stampCount = stampedIndices.length;
@@ -86,7 +88,7 @@ function App() {
             document.getElementById("last-ruined-input").showPicker()
           }
         >
-          <div className="day-count-label">LAST RUINED</div>
+          <div className="day-count-label">DAYS SINCE LAST RUINED</div>
           <input
             type="date"
             id="last-ruined-input"
@@ -104,7 +106,7 @@ function App() {
             document.getElementById("last-full-input").showPicker()
           }
         >
-          <div className="day-count-label">LAST FULL</div>
+          <div className="day-count-label">DAYS SINCE LAST FULL</div>
           <input
             type="date"
             id="last-full-input"
@@ -118,15 +120,17 @@ function App() {
         </div>
       </div>
 
-      <div className={`reward ${isUnlocked ? "show" : ""}`}>Lock Released</div>
+      <div className={`reward ${isUnlocked ? "show" : ""}`} id="reward">
+        Present to keyholder to claim a reward
+      </div>
 
       <button className="reset-btn" onClick={resetCard}>
-        Reset Card
+        RESET CARD
       </button>
 
       <div className="fine-print">
-        Keys may be reset at Bae's discretion for bad behaviour, disobedience or
-        any other reason - with no explanation required.
+        Keys may be removed or reset at Bae's discretion without warning or
+        explanation.
       </div>
     </div>
   );
