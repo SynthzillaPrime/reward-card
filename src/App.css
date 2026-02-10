@@ -1,0 +1,233 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    font-family: "Georgia", serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    touch-action: manipulation;
+}
+
+.card {
+    background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(218, 165, 32, 0.15);
+    width: 95vw;
+    max-width: 500px;
+    height: auto;
+    border: 3px solid #daa520;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.fine-print {
+    text-align: center;
+    font-size: clamp(10px, 2.5vw, 12px);
+    color: #daa520;
+    margin-top: 20px;
+    line-height: 1.4;
+    opacity: 0.7;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #daa520, #b8860b, #daa520);
+    border-radius: 22px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+h1 {
+    color: #daa520;
+    margin: 0;
+    font-size: clamp(22px, 6vw, 28px);
+    text-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+    letter-spacing: 2px;
+}
+
+.lock-icon {
+    font-size: clamp(28px, 8vw, 36px);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #c0c0c0;
+    font-style: italic;
+    margin-top: 5px;
+    font-size: clamp(12px, 3.5vw, 16px);
+}
+
+.description {
+    text-align: center;
+    color: #daa520;
+    margin-bottom: 25px;
+    font-size: 20px;
+    line-height: 1.6;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.stamps-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 20px 0;
+    flex-grow: 1;
+}
+
+.stamp {
+    aspect-ratio: 1;
+    border: 2px dashed #4a4a4a;
+    border-radius: 4px;
+    background: #1a1a1a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.stamp:hover {
+    background: #252525;
+    border-color: #6a6a6a;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.2);
+}
+
+.stamp.stamped {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-color: #daa520;
+    cursor: pointer;
+    box-shadow:
+        0 0 20px rgba(218, 165, 32, 0.4),
+        inset 0 0 10px rgba(218, 165, 32, 0.2);
+}
+
+.stamp.stamped:hover {
+    transform: scale(1.05);
+    opacity: 0.8;
+    box-shadow: 0 0 25px rgba(218, 165, 32, 0.6);
+}
+
+.key {
+    display: none;
+    color: #daa520;
+    filter: drop-shadow(0 0 8px rgba(218, 165, 32, 0.8));
+    animation: keyAppear 0.5s ease;
+}
+
+.stamp.stamped .key {
+    display: block;
+}
+
+@keyframes keyAppear {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.reward {
+    background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+    color: #1a1a1a;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: bold;
+    display: none;
+    animation: rewardAppear 0.6s ease;
+    box-shadow: 0 0 30px rgba(218, 165, 32, 0.6);
+}
+
+.reward.show {
+    display: block;
+}
+
+@keyframes rewardAppear {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.counter {
+    text-align: center;
+    color: #daa520;
+    font-size: clamp(14px, 4vw, 18px);
+    margin-top: 5px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(218, 165, 32, 0.3);
+}
+
+.reset-btn {
+    display: block;
+    margin: 6px auto 0;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #daa520;
+    border-radius: 12px;
+    color: #daa520;
+    font-size: clamp(12px, 3vw, 16px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Georgia", serif;
+}
+
+.reset-btn:hover {
+    background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+    color: #1a1a1a;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+}
+
+.lock-status {
+    text-align: center;
+    margin-top: 6px;
+    padding: 6px;
+    background: rgba(26, 26, 26, 0.5);
+    border-radius: 6px;
+    border: 1px solid #4a4a4a;
+}
+
+.lock-status-locked {
+    color: #ff6b6b;
+    font-size: clamp(12px, 3vw, 15px);
+}
+
+.lock-status-unlocked {
+    color: #51cf66;
+    font-size: clamp(12px, 3vw, 15px);
+}
