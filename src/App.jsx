@@ -76,7 +76,7 @@ function App() {
           style={{ color: isUnlocked ? "#daa520" : "#999" }}
         >
           {isUnlocked
-            ? "🔓 UNLOCKED — ALL KEYS COLLECTED"
+            ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
             : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
         </span>
       </div>
@@ -118,10 +118,6 @@ function App() {
             {calculateDays(lastFullDate)}
           </div>
         </div>
-      </div>
-
-      <div className={`reward ${isUnlocked ? "show" : ""}`} id="reward">
-        Present to keyholder to claim a reward
       </div>
 
       <button className="reset-btn" onClick={resetCard}>
