@@ -12,6 +12,9 @@ function App() {
   const [lastFullDate, setLastFullDate] = useState(
     localStorage.getItem("lastFullDate") || "",
   );
+  const [lockedDate, setLockedDate] = useState(
+    localStorage.getItem("lockedDate") || "",
+  );
 
   const totalKeys = 10;
 
@@ -52,9 +55,12 @@ function App() {
     if (type === "ruined") {
       setLastRuinedDate(value);
       localStorage.setItem("lastRuinedDate", value);
-    } else {
+    } else if (type === "full") {
       setLastFullDate(value);
       localStorage.setItem("lastFullDate", value);
+    } else {
+      setLockedDate(value);
+      localStorage.setItem("lockedDate", value);
     }
   };
 
@@ -64,6 +70,17 @@ function App() {
         <span className="lock-icon">🔒</span>
         <h1>REWARD CARD</h1>
         <div className="subtitle">Earn 10 keys to unlock a reward...</div>
+      </div>
+
+      <div className="lock-status">
+        <span
+          id="status-text"
+          style={{ color: isUnlocked ? "#daa520" : "#999" }}
+        >
+          {isUnlocked
+            ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
+            : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
+        </span>
       </div>
 
       <div className="stamps-container">
@@ -76,17 +93,6 @@ function App() {
             <span className="key">🗝️</span>
           </div>
         ))}
-      </div>
-
-      <div className="lock-status">
-        <span
-          id="status-text"
-          style={{ color: isUnlocked ? "#daa520" : "#999" }}
-        >
-          {isUnlocked
-            ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
-            : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
-        </span>
       </div>
 
       <div className="days-tracker">
@@ -124,6 +130,22 @@ function App() {
           />
           <div className="day-count-number" id="last-full-display">
             {calculateDays(lastFullDate)}
+          </div>
+        </div>
+        <div
+          className="day-count"
+          onClick={() => document.getElementById("locked-input").showPicker()}
+        >
+          <div className="day-count-label">DAYS LOCKED</div>
+          <input
+            type="date"
+            id="locked-input"
+            className="date-input"
+            value={lockedDate}
+            onChange={(e) => handleDateChange("locked", e.target.value)}
+          />
+          <div className="day-count-number" id="locked-display">
+            {calculateDays(lockedDate)}
           </div>
         </div>
       </div>

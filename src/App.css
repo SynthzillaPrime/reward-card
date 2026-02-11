@@ -4,9 +4,6 @@
     box-sizing: border-box;
 }
 
-html {
-}
-
 body {
     font-family: "Montserrat", sans-serif;
     background: linear-gradient(165deg, #2c2c2c 0%, #1a1a1a 100%);
@@ -141,7 +138,7 @@ h1 {
 
 .days-tracker {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 15px;
     margin-top: 30px;
 }
