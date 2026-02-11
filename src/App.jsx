@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [stampedIndices, setStampedIndices] = useState([]);
+  const [stampedIndices, setStampedIndices] = useState(() => {
+    const saved = localStorage.getItem("stampedIndices");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [lastRuinedDate, setLastRuinedDate] = useState(
     localStorage.getItem("lastRuinedDate") || "",
   );
@@ -11,6 +14,10 @@ function App() {
   );
 
   const totalKeys = 10;
+
+  useEffect(() => {
+    localStorage.setItem("stampedIndices", JSON.stringify(stampedIndices));
+  }, [stampedIndices]);
 
   const toggleStamp = (index) => {
     if (stampedIndices.includes(index)) {
@@ -23,6 +30,7 @@ function App() {
   const resetCard = () => {
     if (confirm("Reset the card? This will clear all keys.")) {
       setStampedIndices([]);
+      localStorage.removeItem("stampedIndices");
     }
   };
 
