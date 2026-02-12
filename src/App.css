@@ -13,11 +13,12 @@ body,
 
 body {
     font-family: "Montserrat", sans-serif;
-    background: linear-gradient(165deg, #2c2c2c 0%, #1a1a1a 100%);
+    background: #0f0f0f;
     color: #999;
     font-weight: 300;
     touch-action: manipulation;
     -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
 }
 
 .card {
@@ -26,10 +27,9 @@ body {
     width: 100%;
     max-width: 420px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     gap: 15px;
     border-left: 1px solid rgba(218, 165, 32, 0.15);
     border-right: 1px solid rgba(218, 165, 32, 0.15);
