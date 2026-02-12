@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
+  const [tick, setTick] = useState(0);
   const [stampedIndices, setStampedIndices] = useState(() => {
     const saved = localStorage.getItem("stampedIndices");
     return saved ? JSON.parse(saved) : [];
@@ -9,8 +10,8 @@ function App() {
   const [lastRuinedDate, setLastRuinedDate] = useState(
     localStorage.getItem("lastRuinedDate") || "",
   );
-  const [lastFullDate, setLastFullDate] = useState(
-    localStorage.getItem("lastFullDate") || "",
+  const [lastProperDate, setLastProperDate] = useState(
+    localStorage.getItem("lastProperDate") || "",
   );
   const [lockedDate, setLockedDate] = useState(
     localStorage.getItem("lockedDate") || "",
@@ -21,6 +22,25 @@ function App() {
   useEffect(() => {
     localStorage.setItem("stampedIndices", JSON.stringify(stampedIndices));
   }, [stampedIndices]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 3600000); // Once per hour
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        setTick((t) => t + 1);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   const toggleStamp = (index) => {
     if (stampedIndices.includes(index)) {
@@ -55,9 +75,9 @@ function App() {
     if (type === "ruined") {
       setLastRuinedDate(value);
       localStorage.setItem("lastRuinedDate", value);
-    } else if (type === "full") {
-      setLastFullDate(value);
-      localStorage.setItem("lastFullDate", value);
+    } else if (type === "proper") {
+      setLastProperDate(value);
+      localStorage.setItem("lastProperDate", value);
     } else {
       setLockedDate(value);
       localStorage.setItem("lockedDate", value);
@@ -72,7 +92,7 @@ function App() {
         <div className="subtitle">Earn 10 keys to unlock a reward...</div>
       </div>
 
-      <div className="lock-status">
+      <div className={`lock-status ${isUnlocked ? "unlocked" : ""}`}>
         <span
           id="status-text"
           style={{ color: isUnlocked ? "#daa520" : "#999" }}
@@ -95,7 +115,27 @@ function App() {
         ))}
       </div>
 
+      <button className="reset-btn" onClick={resetCard}>
+        RESET KEYS
+      </button>
+
       <div className="days-tracker">
+        <div
+          className="day-count"
+          onClick={() => document.getElementById("locked-input").showPicker()}
+        >
+          <div className="day-count-label">DAYS LOCKED</div>
+          <input
+            type="date"
+            id="locked-input"
+            className="date-input"
+            value={lockedDate}
+            onChange={(e) => handleDateChange("locked", e.target.value)}
+          />
+          <div className="day-count-number" id="locked-display">
+            {calculateDays(lockedDate)}
+          </div>
+        </div>
         <div
           className="day-count"
           onClick={() =>
@@ -117,42 +157,22 @@ function App() {
         <div
           className="day-count"
           onClick={() =>
-            document.getElementById("last-full-input").showPicker()
+            document.getElementById("last-proper-input").showPicker()
           }
         >
-          <div className="day-count-label">LAST FULL</div>
+          <div className="day-count-label">LAST PROPER</div>
           <input
             type="date"
-            id="last-full-input"
+            id="last-proper-input"
             className="date-input"
-            value={lastFullDate}
-            onChange={(e) => handleDateChange("full", e.target.value)}
+            value={lastProperDate}
+            onChange={(e) => handleDateChange("proper", e.target.value)}
           />
-          <div className="day-count-number" id="last-full-display">
-            {calculateDays(lastFullDate)}
-          </div>
-        </div>
-        <div
-          className="day-count"
-          onClick={() => document.getElementById("locked-input").showPicker()}
-        >
-          <div className="day-count-label">DAYS LOCKED</div>
-          <input
-            type="date"
-            id="locked-input"
-            className="date-input"
-            value={lockedDate}
-            onChange={(e) => handleDateChange("locked", e.target.value)}
-          />
-          <div className="day-count-number" id="locked-display">
-            {calculateDays(lockedDate)}
+          <div className="day-count-number" id="last-proper-display">
+            {calculateDays(lastProperDate)}
           </div>
         </div>
       </div>
-
-      <button className="reset-btn" onClick={resetCard}>
-        RESET CARD
-      </button>
 
       <div className="fine-print">
         Keys may be removed or reset at Bae's discretion without warning or
