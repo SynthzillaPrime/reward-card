@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow: hidden;
+}
+
 body {
     font-family: "Montserrat", sans-serif;
     background: linear-gradient(165deg, #2c2c2c 0%, #1a1a1a 100%);
@@ -11,7 +15,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 10px;
     color: #999;
     font-weight: 300;
     touch-action: manipulation;
@@ -20,7 +24,7 @@ body {
 .card {
     background: linear-gradient(165deg, #1a1a1a 0%, #0f0f0f 100%);
     border-radius: 2px;
-    padding: 40px 30px;
+    padding: 25px 15px;
     max-width: 420px;
     width: 100%;
     box-shadow:
@@ -80,7 +84,7 @@ h1 {
 .stamps-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+    gap: 8px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
@@ -145,7 +149,7 @@ h1 {
 .days-tracker {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
+    gap: 8px;
     margin-top: 30px;
 }
 
