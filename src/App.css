@@ -13,7 +13,7 @@ body {
     background: linear-gradient(165deg, #2c2c2c 0%, #1a1a1a 100%);
     min-height: 100dvh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 10px;
     color: #999;
@@ -24,7 +24,8 @@ body {
 .card {
     background: linear-gradient(165deg, #1a1a1a 0%, #0f0f0f 100%);
     border-radius: 2px;
-    padding: 25px 15px;
+    padding: 20px 15px;
+    max-height: 100dvh;
     max-width: 420px;
     width: 100%;
     box-shadow:
@@ -50,15 +51,15 @@ body {
 
 .header {
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
     border-bottom: 1px solid rgba(218, 165, 32, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .lock-icon {
-    font-size: 36px;
+    font-size: 28px;
     opacity: 0.6;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     display: block;
 }
 
@@ -67,7 +68,7 @@ h1 {
     font-weight: 300;
     color: #daa520;
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
     letter-spacing: 4px;
     text-transform: uppercase;
 }
@@ -85,8 +86,8 @@ h1 {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .stamp {
@@ -155,7 +156,7 @@ h1 {
 
 .day-count {
     background: rgba(26, 26, 26, 0.5);
-    padding: 20px 15px;
+    padding: 12px 10px;
     text-align: center;
     border: 1px solid rgba(218, 165, 32, 0.15);
     cursor: pointer;
