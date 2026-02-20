@@ -3,6 +3,9 @@ import { supabase } from "./supabase";
 import "./App.css";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [showUnlock, setShowUnlock] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const [tick, setTick] = useState(0);
   const [stampedIndices, setStampedIndices] = useState([]);
   const [lastRuinedDate, setLastRuinedDate] = useState("");
@@ -30,6 +33,15 @@ function App() {
         setLastRuinedDate(data.last_ruined_date || "");
         setLastProperDate(data.last_proper_date || "");
         setCorrectPin(data.pin || "");
+
+        // Loading transition sequence
+        setShowUnlock(true);
+        setTimeout(() => {
+          setIsFadingOut(true);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 300);
+        }, 300);
       }
     };
 
@@ -150,120 +162,132 @@ function App() {
   };
 
   return (
-    <div className="card">
-      <div
-        className="header"
-        onClick={handleEditorLogin}
-        style={{ cursor: "pointer" }}
-      >
-        <span className="lock-icon">{isEditor ? "🔓" : "🔒"}</span>
-        <h1>REWARD CARD</h1>
-        <div className="subtitle">Earn 10 keys to unlock a reward...</div>
-      </div>
-
-      <div className={`lock-status ${isUnlocked ? "unlocked" : ""}`}>
-        <span
-          id="status-text"
-          style={{ color: isUnlocked ? "#daa520" : "#999" }}
-        >
-          {isUnlocked
-            ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
-            : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
-        </span>
-      </div>
-
-      <div className="stamps-container">
-        {[...Array(totalKeys)].map((_, index) => (
-          <div
-            key={index}
-            className={`stamp ${stampedIndices.includes(index) ? "stamped" : ""}`}
-            style={{ cursor: isEditor ? "pointer" : "default" }}
-            onClick={() => toggleStamp(index)}
-          >
-            <span className="key">🗝️</span>
+    <>
+      {isLoading && (
+        <div className={`loading-screen ${isFadingOut ? "fade-out" : ""}`}>
+          <div className={`loading-emoji ${showUnlock ? "pop" : ""}`}>
+            {showUnlock ? "🔓" : "🔒"}
           </div>
-        ))}
-      </div>
-
-      {isEditor && (
-        <button className="reset-btn" onClick={resetCard}>
-          RESET KEYS
-        </button>
+          <div className="loading-text">
+            Loading<span className="loading-dots">...</span>
+          </div>
+        </div>
       )}
+      <div className="card">
+        <div
+          className="header"
+          onClick={handleEditorLogin}
+          style={{ cursor: "pointer" }}
+        >
+          <span className="lock-icon">{isEditor ? "🔓" : "🔒"}</span>
+          <h1>REWARD CARD</h1>
+          <div className="subtitle">Earn 10 keys to unlock a reward...</div>
+        </div>
 
-      <div className="days-tracker">
-        <div
-          className="day-count"
-          onClick={() =>
-            isEditor && document.getElementById("locked-input").showPicker()
-          }
-          style={{ cursor: isEditor ? "pointer" : "default" }}
-        >
-          <div className="day-count-label">DAYS LOCKED</div>
-          {isEditor && (
-            <input
-              type="date"
-              id="locked-input"
-              className="date-input"
-              value={lockedDate}
-              onChange={(e) => handleDateChange("locked", e.target.value)}
-            />
-          )}
-          <div className="day-count-number" id="locked-display">
-            {calculateDays(lockedDate)}
+        <div className={`lock-status ${isUnlocked ? "unlocked" : ""}`}>
+          <span
+            id="status-text"
+            style={{ color: isUnlocked ? "#daa520" : "#999" }}
+          >
+            {isUnlocked
+              ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
+              : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
+          </span>
+        </div>
+
+        <div className="stamps-container">
+          {[...Array(totalKeys)].map((_, index) => (
+            <div
+              key={index}
+              className={`stamp ${stampedIndices.includes(index) ? "stamped" : ""}`}
+              style={{ cursor: isEditor ? "pointer" : "default" }}
+              onClick={() => toggleStamp(index)}
+            >
+              <span className="key">🗝️</span>
+            </div>
+          ))}
+        </div>
+
+        {isEditor && (
+          <button className="reset-btn" onClick={resetCard}>
+            RESET KEYS
+          </button>
+        )}
+
+        <div className="days-tracker">
+          <div
+            className="day-count"
+            onClick={() =>
+              isEditor && document.getElementById("locked-input").showPicker()
+            }
+            style={{ cursor: isEditor ? "pointer" : "default" }}
+          >
+            <div className="day-count-label">DAYS LOCKED</div>
+            {isEditor && (
+              <input
+                type="date"
+                id="locked-input"
+                className="date-input"
+                value={lockedDate}
+                onChange={(e) => handleDateChange("locked", e.target.value)}
+              />
+            )}
+            <div className="day-count-number" id="locked-display">
+              {calculateDays(lockedDate)}
+            </div>
+          </div>
+          <div
+            className="day-count"
+            onClick={() =>
+              isEditor &&
+              document.getElementById("last-ruined-input").showPicker()
+            }
+            style={{ cursor: isEditor ? "pointer" : "default" }}
+          >
+            <div className="day-count-label">LAST RUINED</div>
+            {isEditor && (
+              <input
+                type="date"
+                id="last-ruined-input"
+                className="date-input"
+                value={lastRuinedDate}
+                onChange={(e) => handleDateChange("ruined", e.target.value)}
+              />
+            )}
+            <div className="day-count-number" id="last-ruined-display">
+              {calculateDays(lastRuinedDate)}
+            </div>
+          </div>
+          <div
+            className="day-count"
+            onClick={() =>
+              isEditor &&
+              document.getElementById("last-proper-input").showPicker()
+            }
+            style={{ cursor: isEditor ? "pointer" : "default" }}
+          >
+            <div className="day-count-label">LAST PROPER</div>
+            {isEditor && (
+              <input
+                type="date"
+                id="last-proper-input"
+                className="date-input"
+                value={lastProperDate}
+                onChange={(e) => handleDateChange("proper", e.target.value)}
+              />
+            )}
+            <div className="day-count-number" id="last-proper-display">
+              {calculateDays(lastProperDate)}
+            </div>
           </div>
         </div>
-        <div
-          className="day-count"
-          onClick={() =>
-            isEditor &&
-            document.getElementById("last-ruined-input").showPicker()
-          }
-          style={{ cursor: isEditor ? "pointer" : "default" }}
-        >
-          <div className="day-count-label">LAST RUINED</div>
-          {isEditor && (
-            <input
-              type="date"
-              id="last-ruined-input"
-              className="date-input"
-              value={lastRuinedDate}
-              onChange={(e) => handleDateChange("ruined", e.target.value)}
-            />
-          )}
-          <div className="day-count-number" id="last-ruined-display">
-            {calculateDays(lastRuinedDate)}
-          </div>
-        </div>
-        <div
-          className="day-count"
-          onClick={() =>
-            isEditor &&
-            document.getElementById("last-proper-input").showPicker()
-          }
-          style={{ cursor: isEditor ? "pointer" : "default" }}
-        >
-          <div className="day-count-label">LAST PROPER</div>
-          {isEditor && (
-            <input
-              type="date"
-              id="last-proper-input"
-              className="date-input"
-              value={lastProperDate}
-              onChange={(e) => handleDateChange("proper", e.target.value)}
-            />
-          )}
-          <div className="day-count-number" id="last-proper-display">
-            {calculateDays(lastProperDate)}
-          </div>
+
+        <div className="fine-print">
+          Keys may be removed or reset at Bae's discretion without warning or
+          explanation.
         </div>
       </div>
-
-      <div className="fine-print">
-        Keys may be removed or reset at Bae's discretion without warning or
-        explanation.
-      </div>
-    </div>
+    </>
   );
 }
 
