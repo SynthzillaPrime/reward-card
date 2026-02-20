@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
+import SpinWheel from "./SpinWheel";
 import "./App.css";
 
 function App() {
@@ -11,7 +12,9 @@ function App() {
   const [lastRuinedDate, setLastRuinedDate] = useState("");
   const [lastProperDate, setLastProperDate] = useState("");
   const [lockedDate, setLockedDate] = useState("");
+  const [lastReward, setLastReward] = useState("");
   const [correctPin, setCorrectPin] = useState("");
+  const [showWheel, setShowWheel] = useState(false);
   const [isEditor, setIsEditor] = useState(() => {
     return sessionStorage.getItem("isEditor") === "true";
   });
@@ -32,6 +35,7 @@ function App() {
         setLockedDate(data.locked_date || "");
         setLastRuinedDate(data.last_ruined_date || "");
         setLastProperDate(data.last_proper_date || "");
+        setLastReward(data.last_reward || "");
         setCorrectPin(data.pin || "");
 
         // Loading transition sequence
@@ -57,6 +61,7 @@ function App() {
           setLockedDate(payload.new.locked_date);
           setLastRuinedDate(payload.new.last_ruined_date);
           setLastProperDate(payload.new.last_proper_date);
+          setLastReward(payload.new.last_reward || "");
         },
       )
       .subscribe();
@@ -132,6 +137,17 @@ function App() {
     }
   };
 
+  const handleWheelReset = (prize) => {
+    // Save prize, clear stamps, return to card
+    setLastReward(prize);
+    setStampedIndices([]);
+    setShowWheel(false);
+    updateSupabase({
+      last_reward: prize,
+      stamped_indices: [],
+    });
+  };
+
   const stampCount = stampedIndices.length;
   const isUnlocked = stampCount === totalKeys;
 
@@ -160,6 +176,15 @@ function App() {
       updateSupabase({ locked_date: value });
     }
   };
+
+  // Show wheel screen
+  if (showWheel && !isLoading) {
+    return (
+      <div className="card">
+        <SpinWheel onReset={handleWheelReset} />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -190,9 +215,12 @@ function App() {
             style={{ color: isUnlocked ? "#daa520" : "#999" }}
           >
             {isUnlocked
-              ? "PRESENT TO KEYHOLDER TO CLAIM REWARD"
+              ? "🔓 ALL 10 KEYS EARNED — REWARD UNLOCKED"
               : `🔒 LOCKED — ${totalKeys - stampCount} KEYS REMAINING`}
           </span>
+          {lastReward && (
+            <div className="last-reward">Last reward — {lastReward}</div>
+          )}
         </div>
 
         <div className="stamps-container">
@@ -208,11 +236,15 @@ function App() {
           ))}
         </div>
 
-        {isEditor && (
+        {isUnlocked ? (
+          <button className="reset-btn spin-trigger" onClick={() => setShowWheel(true)}>
+            SPIN THE WHEEL TO REVEAL YOUR REWARD
+          </button>
+        ) : isEditor ? (
           <button className="reset-btn" onClick={resetCard}>
             RESET KEYS
           </button>
-        )}
+        ) : null}
 
         <div className="days-tracker">
           <div
