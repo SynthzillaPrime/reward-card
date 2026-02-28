@@ -184,7 +184,8 @@ h1 {
 }
 
 @keyframes pulse-glow {
-    0%, 100% {
+    0%,
+    100% {
         box-shadow: 0 0 5px rgba(218, 165, 32, 0.2);
     }
     50% {
@@ -232,6 +233,11 @@ h1 {
     font-size: 26px;
     font-weight: 300;
     color: #daa520;
+    line-height: 1;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .fine-print {
