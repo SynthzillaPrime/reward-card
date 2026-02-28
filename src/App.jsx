@@ -326,7 +326,7 @@ function App() {
                 fontWeight: 300,
               }}
             >
-              BEST: {bestLocked}
+              LONGEST: {bestLocked}
             </div>
           </div>
           <div
@@ -359,7 +359,7 @@ function App() {
                 fontWeight: 300,
               }}
             >
-              BEST: {bestRuined}
+              LONGEST: {bestRuined}
             </div>
           </div>
           <div
@@ -392,7 +392,7 @@ function App() {
                 fontWeight: 300,
               }}
             >
-              BEST: {bestProper}
+              LONGEST: {bestProper}
             </div>
           </div>
         </div>
