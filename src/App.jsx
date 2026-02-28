@@ -14,8 +14,13 @@ function App() {
   const [lockedDate, setLockedDate] = useState("");
   const [lastReward, setLastReward] = useState("");
   const [correctPin, setCorrectPin] = useState("");
+  const [bestLocked, setBestLocked] = useState(0);
+  const [bestRuined, setBestRuined] = useState(0);
+  const [bestProper, setBestProper] = useState(0);
   const [showWheel, setShowWheel] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
+  const [showRuinedModal, setShowRuinedModal] = useState(false);
+  const [showProperModal, setShowProperModal] = useState(false);
   const [isEditor, setIsEditor] = useState(() => {
     return sessionStorage.getItem("isEditor") === "true";
   });
@@ -38,6 +43,9 @@ function App() {
         setLastProperDate(data.last_proper_date || "");
         setLastReward(data.last_reward || "");
         setCorrectPin(data.pin || "");
+        setBestLocked(data.best_locked || 0);
+        setBestRuined(data.best_ruined || 0);
+        setBestProper(data.best_proper || 0);
 
         // Loading transition sequence
         setShowUnlock(true);
@@ -63,6 +71,9 @@ function App() {
           setLastRuinedDate(payload.new.last_ruined_date);
           setLastProperDate(payload.new.last_proper_date);
           setLastReward(payload.new.last_reward || "");
+          setBestLocked(payload.new.best_locked || 0);
+          setBestRuined(payload.new.best_ruined || 0);
+          setBestProper(payload.new.best_proper || 0);
         },
       )
       .subscribe();
@@ -91,6 +102,40 @@ function App() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  useEffect(() => {
+    const updates = {};
+
+    const currentLocked = calculateDays(lockedDate);
+    if (typeof currentLocked === "number" && currentLocked > bestLocked) {
+      setBestLocked(currentLocked);
+      updates.best_locked = currentLocked;
+    }
+
+    const currentRuined = calculateDays(lastRuinedDate);
+    if (typeof currentRuined === "number" && currentRuined > bestRuined) {
+      setBestRuined(currentRuined);
+      updates.best_ruined = currentRuined;
+    }
+
+    const currentProper = calculateDays(lastProperDate);
+    if (typeof currentProper === "number" && currentProper > bestProper) {
+      setBestProper(currentProper);
+      updates.best_proper = currentProper;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      updateSupabase(updates);
+    }
+  }, [
+    tick,
+    lockedDate,
+    lastRuinedDate,
+    lastProperDate,
+    bestLocked,
+    bestRuined,
+    bestProper,
+  ]);
 
   const updateSupabase = async (updates) => {
     const { error } = await supabase
@@ -272,13 +317,24 @@ function App() {
             <div className="day-count-number" id="locked-display">
               {calculateDays(lockedDate)}
             </div>
+            <div
+              style={{
+                fontSize: "8px",
+                color: "#555",
+                marginTop: "4px",
+                letterSpacing: "1px",
+                fontWeight: 300,
+              }}
+            >
+              BEST: {bestLocked}
+            </div>
           </div>
           <div
             className="day-count"
-            onClick={() =>
-              isEditor &&
-              document.getElementById("last-ruined-input").showPicker()
-            }
+            onClick={() => {
+              if (!isEditor) return;
+              setShowRuinedModal(true);
+            }}
             style={{ cursor: isEditor ? "pointer" : "default" }}
           >
             <div className="day-count-label">LAST RUINED</div>
@@ -294,13 +350,24 @@ function App() {
             <div className="day-count-number" id="last-ruined-display">
               {calculateDays(lastRuinedDate)}
             </div>
+            <div
+              style={{
+                fontSize: "8px",
+                color: "#555",
+                marginTop: "4px",
+                letterSpacing: "1px",
+                fontWeight: 300,
+              }}
+            >
+              BEST: {bestRuined}
+            </div>
           </div>
           <div
             className="day-count"
-            onClick={() =>
-              isEditor &&
-              document.getElementById("last-proper-input").showPicker()
-            }
+            onClick={() => {
+              if (!isEditor) return;
+              setShowProperModal(true);
+            }}
             style={{ cursor: isEditor ? "pointer" : "default" }}
           >
             <div className="day-count-label">LAST PROPER</div>
@@ -315,6 +382,17 @@ function App() {
             )}
             <div className="day-count-number" id="last-proper-display">
               {calculateDays(lastProperDate)}
+            </div>
+            <div
+              style={{
+                fontSize: "8px",
+                color: "#555",
+                marginTop: "4px",
+                letterSpacing: "1px",
+                fontWeight: 300,
+              }}
+            >
+              BEST: {bestProper}
             </div>
           </div>
         </div>
@@ -412,6 +490,226 @@ function App() {
             </button>
             <button
               onClick={() => setShowLockModal(false)}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                background: "transparent",
+                border: "1px solid rgba(100,100,100,0.3)",
+                color: "#666",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showRuinedModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
+          }}
+        >
+          <div
+            style={{
+              background: "#1a1a1a",
+              border: "1px solid rgba(218,165,32,0.3)",
+              padding: "30px",
+              textAlign: "center",
+              maxWidth: "300px",
+              width: "90%",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: '"Cormorant Garamond", serif',
+                color: "#daa520",
+                fontSize: "18px",
+                marginBottom: "20px",
+                letterSpacing: "2px",
+              }}
+            >
+              LAST RUINED
+            </div>
+            <button
+              onClick={() => {
+                setShowRuinedModal(false);
+                setTimeout(
+                  () =>
+                    document.getElementById("last-ruined-input").showPicker(),
+                  100,
+                );
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+                background: "transparent",
+                border: "1px solid rgba(218,165,32,0.45)",
+                color: "#daa520",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              SET DATE
+            </button>
+            <button
+              onClick={() => {
+                setLastRuinedDate("");
+                updateSupabase({ last_ruined_date: "" });
+                setShowRuinedModal(false);
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+                background: "transparent",
+                border: "1px solid rgba(218,165,32,0.45)",
+                color: "#daa520",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              NOT TRACKING
+            </button>
+            <button
+              onClick={() => setShowRuinedModal(false)}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                background: "transparent",
+                border: "1px solid rgba(100,100,100,0.3)",
+                color: "#666",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showProperModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
+          }}
+        >
+          <div
+            style={{
+              background: "#1a1a1a",
+              border: "1px solid rgba(218,165,32,0.3)",
+              padding: "30px",
+              textAlign: "center",
+              maxWidth: "300px",
+              width: "90%",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: '"Cormorant Garamond", serif',
+                color: "#daa520",
+                fontSize: "18px",
+                marginBottom: "20px",
+                letterSpacing: "2px",
+              }}
+            >
+              LAST PROPER
+            </div>
+            <button
+              onClick={() => {
+                setShowProperModal(false);
+                setTimeout(
+                  () =>
+                    document.getElementById("last-proper-input").showPicker(),
+                  100,
+                );
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+                background: "transparent",
+                border: "1px solid rgba(218,165,32,0.45)",
+                color: "#daa520",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              SET DATE
+            </button>
+            <button
+              onClick={() => {
+                setLastProperDate("");
+                updateSupabase({ last_proper_date: "" });
+                setShowProperModal(false);
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "12px",
+                marginBottom: "10px",
+                background: "transparent",
+                border: "1px solid rgba(218,165,32,0.45)",
+                color: "#daa520",
+                fontSize: "10px",
+                fontWeight: 300,
+                cursor: "pointer",
+                fontFamily: '"Montserrat", sans-serif',
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+              }}
+            >
+              NOT TRACKING
+            </button>
+            <button
+              onClick={() => setShowProperModal(false)}
               style={{
                 display: "block",
                 width: "100%",
