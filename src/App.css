@@ -206,12 +206,10 @@ h1 {
     border: 1px solid rgba(218, 165, 32, 0.3);
     cursor: pointer;
     position: relative;
-    display: grid;
-    grid-template-rows: 12px 1fr 12px;
-    align-items: center;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-width: 0;
-    min-height: 80px;
 }
 
 .date-input {
@@ -223,9 +221,11 @@ h1 {
 .day-count-label {
     font-size: 8px;
     color: #888;
+    margin-bottom: 4px;
     text-transform: uppercase;
     font-weight: 300;
     letter-spacing: 1.5px;
+    min-height: 2.4em;
 }
 
 .day-count-number {
@@ -233,6 +233,11 @@ h1 {
     font-size: 26px;
     font-weight: 300;
     color: #daa520;
+    line-height: 1;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .fine-print {
