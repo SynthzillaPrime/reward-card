@@ -321,9 +321,9 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
+                minHeight: "2.4em",
               }}
             >
               LONGEST: {bestLocked}
@@ -354,9 +354,9 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
+                minHeight: "2.4em",
               }}
             >
               LONGEST: {bestRuined}
@@ -387,9 +387,9 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
+                minHeight: "2.4em",
               }}
             >
               LONGEST: {bestProper}
