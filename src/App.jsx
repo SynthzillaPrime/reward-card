@@ -321,12 +321,11 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
               }}
             >
-              BEST: {bestLocked}
+              LONGEST: {bestLocked}
             </div>
           </div>
           <div
@@ -354,12 +353,11 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
               }}
             >
-              BEST: {bestRuined}
+              LONGEST: {bestRuined}
             </div>
           </div>
           <div
@@ -387,12 +385,11 @@ function App() {
               style={{
                 fontSize: "8px",
                 color: "#555",
-                marginTop: "4px",
                 letterSpacing: "1px",
                 fontWeight: 300,
               }}
             >
-              BEST: {bestProper}
+              LONGEST: {bestProper}
             </div>
           </div>
         </div>
