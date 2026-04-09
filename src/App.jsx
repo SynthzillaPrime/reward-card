@@ -155,11 +155,7 @@ function App() {
         </div>
 
         <div className="total-days-locked">
-          TOTAL DAYS LOCKED:{" "}
-          {totalDaysLocked +
-            (typeof calculateDays(lockedDate) === "number"
-              ? calculateDays(lockedDate)
-              : 0)}
+          TOTAL DAYS LOCKED: {totalDaysLocked + calculateDays(lockedDate)}
         </div>
 
         <div className="fine-print">

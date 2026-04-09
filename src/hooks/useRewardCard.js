@@ -26,6 +26,7 @@ export const useRewardCard = () => {
   const totalKeys = 10;
   const pendingUpdates = useRef({});
   const debounceTimer = useRef(null);
+  const bestRef = useRef({ locked: 0, ruined: 0, proper: 0 });
 
   const calculateDays = (dateString) => {
     if (!dateString) return 0;
@@ -92,6 +93,12 @@ export const useRewardCard = () => {
         setBestProper(data.best_proper || 0);
         setTotalDaysLocked(data.total_days_locked || 0);
 
+        bestRef.current = {
+          locked: data.best_locked || 0,
+          ruined: data.best_ruined || 0,
+          proper: data.best_proper || 0,
+        };
+
         setShowUnlock(true);
         setTimeout(() => {
           setIsFadingOut(true);
@@ -119,6 +126,12 @@ export const useRewardCard = () => {
           setBestRuined(payload.new.best_ruined || 0);
           setBestProper(payload.new.best_proper || 0);
           setTotalDaysLocked(payload.new.total_days_locked || 0);
+
+          bestRef.current = {
+            locked: payload.new.best_locked || 0,
+            ruined: payload.new.best_ruined || 0,
+            proper: payload.new.best_proper || 0,
+          };
         },
       )
       .subscribe();
@@ -137,17 +150,20 @@ export const useRewardCard = () => {
       const currentRuinedDays = calculateDays(lastRuinedDate);
       const currentProperDays = calculateDays(lastProperDate);
 
-      if (currentLockedDays > bestLocked) {
+      if (currentLockedDays > bestRef.current.locked) {
         updates.best_locked = currentLockedDays;
         setBestLocked(currentLockedDays);
+        bestRef.current.locked = currentLockedDays;
       }
-      if (currentRuinedDays > bestRuined) {
+      if (currentRuinedDays > bestRef.current.ruined) {
         updates.best_ruined = currentRuinedDays;
         setBestRuined(currentRuinedDays);
+        bestRef.current.ruined = currentRuinedDays;
       }
-      if (currentProperDays > bestProper) {
+      if (currentProperDays > bestRef.current.proper) {
         updates.best_proper = currentProperDays;
         setBestProper(currentProperDays);
+        bestRef.current.proper = currentProperDays;
       }
 
       if (Object.keys(updates).length > 0) {
@@ -167,15 +183,7 @@ export const useRewardCard = () => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [
-    lockedDate,
-    lastRuinedDate,
-    lastProperDate,
-    bestLocked,
-    bestRuined,
-    bestProper,
-    queueUpdate,
-  ]);
+  }, [lockedDate, lastRuinedDate, lastProperDate, queueUpdate]);
 
   const handleEditorLogin = () => {
     if (isEditor) {
@@ -241,8 +249,7 @@ export const useRewardCard = () => {
 
   const clearLockedDate = () => {
     const currentStreak = calculateDays(lockedDate);
-    const numericStreak = typeof currentStreak === "number" ? currentStreak : 0;
-    const newTotal = totalDaysLocked + numericStreak;
+    const newTotal = totalDaysLocked + currentStreak;
     setTotalDaysLocked(newTotal);
     setLockedDate("");
     queueUpdate({

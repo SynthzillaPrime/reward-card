@@ -71,18 +71,18 @@ function SpinWheel({ onReset }) {
   });
 
   return (
-    <div style={styles.container}>
-      <div style={styles.content}>
-        <h1 style={styles.title}>CLAIM REWARD</h1>
-        <p style={styles.subtitle}>ALL 10 KEYS EARNED — SPIN TO REVEAL</p>
+    <div className="wheel-container">
+      <div className="wheel-content">
+        <h1 className="wheel-title">CLAIM REWARD</h1>
+        <p className="wheel-subtitle">ALL 10 KEYS EARNED — SPIN TO REVEAL</p>
 
-        <div style={styles.wheelWrapper}>
-          <div style={styles.pointer}>▼</div>
+        <div className="wheel-wrapper">
+          <div className="wheel-pointer">▼</div>
 
           <svg
             viewBox="0 0 400 400"
+            className="wheel-svg"
             style={{
-              ...styles.svg,
               transform: `rotate(${rotation}deg)`,
               transition: isSpinning ? "none" : "transform 0.3s ease-out",
             }}
@@ -105,11 +105,7 @@ function SpinWheel({ onReset }) {
                           textAnchor="middle"
                           dominantBaseline="middle"
                           fill="#daa520"
-                          style={{
-                            fontFamily: '"Cormorant Garamond", serif',
-                            fontSize: "16px",
-                            fontWeight: 300,
-                          }}
+                          className="wheel-svg-text-small"
                           y="-16"
                         >
                           {slice.name
@@ -124,11 +120,7 @@ function SpinWheel({ onReset }) {
                           textAnchor="middle"
                           dominantBaseline="middle"
                           fill="#daa520"
-                          style={{
-                            fontFamily: '"Cormorant Garamond", serif',
-                            fontSize: "16px",
-                            fontWeight: 300,
-                          }}
+                          className="wheel-svg-text-small"
                           y="0"
                         >
                           {slice.name
@@ -142,11 +134,7 @@ function SpinWheel({ onReset }) {
                         textAnchor="middle"
                         dominantBaseline="middle"
                         fill="#daa520"
-                        style={{
-                          fontFamily: '"Cormorant Garamond", serif',
-                          fontSize: "18px",
-                          fontWeight: 300,
-                        }}
+                        className="wheel-svg-text"
                         y="-8"
                       >
                         {slice.name}
@@ -156,10 +144,7 @@ function SpinWheel({ onReset }) {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fill="rgba(218,165,32,0.5)"
-                      style={{
-                        fontFamily: '"Montserrat", sans-serif',
-                        fontSize: "11px",
-                      }}
+                      className="wheel-svg-weight"
                       y="14"
                     >
                       {slice.weight}%
@@ -183,7 +168,7 @@ function SpinWheel({ onReset }) {
               y={centerY}
               textAnchor="middle"
               dominantBaseline="middle"
-              style={{ fontSize: "32px" }}
+              className="wheel-center-emoji"
             >
               🗝️
             </text>
@@ -195,162 +180,43 @@ function SpinWheel({ onReset }) {
               fill="none"
               stroke="rgba(218,165,32,0.5)"
               strokeWidth="2"
-              style={{ filter: "drop-shadow(0 0 10px rgba(218,165,32,0.3))" }}
+              className="wheel-outer-ring"
             />
           </svg>
         </div>
 
-        <div style={styles.legend}>
+        <div className="wheel-legend">
           {PRIZES.filter((p) => !p.showText).map((prize, i) => (
-            <div key={i} style={styles.legendItem}>
-              <div style={{ ...styles.swatch, backgroundColor: prize.color }} />
-              <span style={styles.legendText}>
+            <div key={i} className="wheel-legend-item">
+              <div
+                className="wheel-legend-swatch"
+                style={{ backgroundColor: prize.color }}
+              />
+              <span className="wheel-legend-text">
                 {prize.name} ({prize.weight}%)
               </span>
             </div>
           ))}
         </div>
 
-        {selectedPrize && <div style={styles.result}>{selectedPrize.name}</div>}
+        {selectedPrize && (
+          <div className="wheel-result">{selectedPrize.name}</div>
+        )}
 
         <button
           onClick={selectedPrize ? () => onReset(selectedPrize.name) : spin}
           disabled={isSpinning}
-          style={{
-            ...styles.button,
-            ...(isSpinning && styles.buttonDisabled),
-          }}
+          className="wheel-btn"
         >
           {selectedPrize ? "RESET KEYS" : "SPIN THE WHEEL"}
         </button>
 
-        <p style={styles.disclaimer}>
+        <p className="wheel-disclaimer">
           Results are final. No re-spins. Bae's discretion applies.
         </p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: "linear-gradient(165deg, #1a1a1a 0%, #0f0f0f 100%)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-    padding: "20px",
-  },
-  content: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100%",
-    maxWidth: "420px",
-  },
-  title: {
-    fontFamily: '"Cormorant Garamond", serif',
-    fontSize: "28px",
-    fontWeight: 300,
-    color: "#daa520",
-    margin: 0,
-    letterSpacing: "6px",
-    textTransform: "uppercase",
-  },
-  subtitle: {
-    fontSize: "9px",
-    color: "#888",
-    letterSpacing: "2px",
-    textTransform: "uppercase",
-    marginTop: "8px",
-    marginBottom: "30px",
-    fontFamily: '"Montserrat", sans-serif',
-  },
-  wheelWrapper: {
-    position: "relative",
-    width: "100%",
-    marginBottom: "25px",
-  },
-  pointer: {
-    position: "absolute",
-    top: "5px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    fontSize: "32px",
-    color: "#daa520",
-    zIndex: 10,
-    filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.8))",
-  },
-  svg: {
-    width: "100%",
-    height: "auto",
-    filter: "drop-shadow(0 5px 20px rgba(0,0,0,0.5))",
-  },
-  legend: {
-    display: "flex",
-    gap: "20px",
-    marginBottom: "25px",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  legendItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  swatch: {
-    width: "18px",
-    height: "18px",
-    borderRadius: "2px",
-    border: "1px solid rgba(218,165,32,0.25)",
-  },
-  legendText: {
-    fontSize: "9px",
-    color: "#888",
-    fontFamily: '"Montserrat", sans-serif',
-    letterSpacing: "0.5px",
-  },
-  result: {
-    fontFamily: '"Cormorant Garamond", serif',
-    fontSize: "32px",
-    fontWeight: 300,
-    color: "#daa520",
-    marginBottom: "20px",
-    textAlign: "center",
-    letterSpacing: "3px",
-    textTransform: "uppercase",
-  },
-  button: {
-    fontFamily: '"Montserrat", sans-serif',
-    fontSize: "10px",
-    fontWeight: 300,
-    color: "#daa520",
-    background: "transparent",
-    border: "1px solid rgba(218,165,32,0.45)",
-    padding: "14px 50px",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    letterSpacing: "2px",
-    textTransform: "uppercase",
-    marginBottom: "15px",
-  },
-  buttonDisabled: {
-    opacity: 0.4,
-    cursor: "not-allowed",
-  },
-  disclaimer: {
-    fontSize: "8px",
-    color: "#666",
-    textAlign: "center",
-    fontFamily: '"Montserrat", sans-serif',
-    letterSpacing: "0.5px",
-    lineHeight: "1.4",
-  },
-};
 
 export default SpinWheel;
