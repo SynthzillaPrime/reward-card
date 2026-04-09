@@ -17,6 +17,7 @@ function App() {
   const [bestLocked, setBestLocked] = useState(0);
   const [bestRuined, setBestRuined] = useState(0);
   const [bestProper, setBestProper] = useState(0);
+  const [totalDaysLocked, setTotalDaysLocked] = useState(0);
   const [showWheel, setShowWheel] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
   const [showRuinedModal, setShowRuinedModal] = useState(false);
@@ -46,6 +47,7 @@ function App() {
         setBestLocked(data.best_locked || 0);
         setBestRuined(data.best_ruined || 0);
         setBestProper(data.best_proper || 0);
+        setTotalDaysLocked(data.total_days_locked || 0);
 
         // Loading transition sequence
         setShowUnlock(true);
@@ -394,6 +396,24 @@ function App() {
           </div>
         </div>
 
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: "9px",
+            color: "#555",
+            letterSpacing: "2px",
+            fontWeight: 300,
+            fontFamily: '"Montserrat", sans-serif',
+            textTransform: "uppercase",
+          }}
+        >
+          TOTAL DAYS LOCKED:{" "}
+          {totalDaysLocked +
+            (typeof calculateDays(lockedDate) === "number"
+              ? calculateDays(lockedDate)
+              : 0)}
+        </div>
+
         <div className="fine-print">
           Keys may be removed or reset at Bae's discretion without warning or
           explanation.
@@ -463,8 +483,16 @@ function App() {
             </button>
             <button
               onClick={() => {
+                const currentStreak = calculateDays(lockedDate);
+                const numericStreak =
+                  typeof currentStreak === "number" ? currentStreak : 0;
+                const newTotal = totalDaysLocked + numericStreak;
+                setTotalDaysLocked(newTotal);
                 setLockedDate("");
-                updateSupabase({ locked_date: "" });
+                updateSupabase({
+                  locked_date: "",
+                  total_days_locked: newTotal,
+                });
                 setShowLockModal(false);
               }}
               style={{
