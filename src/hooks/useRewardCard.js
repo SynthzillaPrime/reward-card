@@ -110,6 +110,7 @@ export const useRewardCard = () => {
     };
 
     fetchData();
+    window.addEventListener("beforeunload", flushUpdates);
 
     const channel = supabase
       .channel("reward_card_changes")
@@ -138,9 +139,10 @@ export const useRewardCard = () => {
 
     return () => {
       supabase.removeChannel(channel);
+      window.removeEventListener("beforeunload", flushUpdates);
       if (debounceTimer.current) clearTimeout(debounceTimer.current);
     };
-  }, []);
+  }, [flushUpdates]);
 
   // Simplified streak check effect (on mount and visibility change)
   useEffect(() => {
