@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React from "react";
+import { useWheelSpin } from "./hooks/useWheelSpin";
 
 const PRIZES = [
   { name: "Handjob", weight: 20, color: "#4A1A2A", showText: true },
@@ -17,59 +18,7 @@ const PRIZES = [
 const TOTAL_WEIGHT = PRIZES.reduce((sum, p) => sum + p.weight, 0);
 
 function SpinWheel({ onReset }) {
-  const [rotation, setRotation] = useState(0);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedPrize, setSelectedPrize] = useState(null);
-
-  const spinWheel = () => {
-    if (isSpinning) return;
-
-    setIsSpinning(true);
-    setSelectedPrize(null);
-
-    const spins = 8 + Math.random() * 4;
-    const randomAngle = Math.random() * 360;
-    const startRotation = rotation;
-    const currentAngleMod = ((startRotation % 360) + 360) % 360;
-    let extraRotation = randomAngle - currentAngleMod;
-    if (extraRotation < 0) extraRotation += 360;
-    const targetRotation = spins * 360 + extraRotation;
-
-    const startTime = Date.now();
-    const duration = 10000;
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = easeOutCubic(progress);
-      const currentRotation = startRotation + targetRotation * eased;
-      setRotation(currentRotation);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        // Determine prize from final visual position
-        const finalAngleMod = ((currentRotation % 360) + 360) % 360;
-        const pointerAngle = (((360 - finalAngleMod) % 360) + 360) % 360;
-
-        let cumAngle = 0;
-        let landedPrize = PRIZES[0];
-        for (let i = 0; i < PRIZES.length; i++) {
-          cumAngle += (PRIZES[i].weight / TOTAL_WEIGHT) * 360;
-          if (pointerAngle < cumAngle) {
-            landedPrize = PRIZES[i];
-            break;
-          }
-        }
-
-        setSelectedPrize(landedPrize);
-        setIsSpinning(false);
-      }
-    };
-
-    animate();
-  };
+  const { rotation, isSpinning, selectedPrize, spin } = useWheelSpin(PRIZES);
 
   // Generate wheel slices
   const radius = 180;
@@ -101,7 +50,7 @@ function SpinWheel({ onReset }) {
     const textX = centerX + textRadius * Math.cos(textAngle);
     const textY = centerY + textRadius * Math.sin(textAngle);
 
-    // THIS WAS THE ISSUE - text needs to flip on left side
+    // Text rotation flip on left side
     let textRotation = midAngle + 90;
     if (midAngle > 90 && midAngle < 270) {
       textRotation = midAngle - 90;
@@ -265,9 +214,7 @@ function SpinWheel({ onReset }) {
         {selectedPrize && <div style={styles.result}>{selectedPrize.name}</div>}
 
         <button
-          onClick={
-            selectedPrize ? () => onReset(selectedPrize.name) : spinWheel
-          }
+          onClick={selectedPrize ? () => onReset(selectedPrize.name) : spin}
           disabled={isSpinning}
           style={{
             ...styles.button,
