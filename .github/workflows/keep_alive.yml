@@ -16,3 +16,9 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
           -H "Content-Type: application/json" \
           -d '{}'
+
+      - name: Clean up old rows
+        run: |
+          curl -X DELETE "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive?pinged_at=lt.$(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ)" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
