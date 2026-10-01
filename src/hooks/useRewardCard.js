@@ -30,12 +30,12 @@ export const useRewardCard = () => {
 
   const calculateDays = (dateString) => {
     if (!dateString) return 0;
-    const selectedDate = new Date(dateString);
+    const selectedDate = new Date(dateString + "T00:00:00");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
     const diffTime = today - selectedDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
     return diffDays < 0 ? 0 : diffDays;
   };
 
