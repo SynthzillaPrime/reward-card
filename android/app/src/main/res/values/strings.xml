@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Reward Card</string>
+    <string name="title_activity_main">Reward Card</string>
+    <string name="package_name">com.synthzillaprime.rewardcard</string>
+    <string name="custom_url_scheme">com.synthzillaprime.rewardcard</string>
+</resources>
