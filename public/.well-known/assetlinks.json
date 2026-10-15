@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.reward_card.twa",
+        "sha256_cert_fingerprints": ["E7:B9:4C:C9:49:B5:DF:EF:8E:0F:C9:94:AD:CA:78:81:AE:CA:45:D0:AC:2E:5A:6F:56:CF:FE:8B:FA:16:C5:9F"]
+      }
+    }]
